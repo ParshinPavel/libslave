@@ -117,7 +117,7 @@ const char* Field_decimal::unpack(const char *from)
     int value_length = decimal_string_size(&dec);
     char buffer[ value_length ];
 
-    if (::decimal2string(&dec, (char*)&buffer, &value_length, zerofill ? precision : 0, scale, '0') != E_DEC_OK) {
+    if (::decimal2string(&dec, (char*)&buffer, &value_length, zerofill ? precision : 0, scale) != E_DEC_OK) {
         throw std::runtime_error("Field_decimal::unpack(): decimal2string() failed");
     }
 

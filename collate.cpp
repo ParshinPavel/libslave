@@ -1,11 +1,10 @@
+#include "nanomysql.h"
+#include "collate.h"
+
 #include <map>
 #include <mysql.h>
 #include <stdexcept>
-#include <stdio.h>
 #include <string>
-#include <vector>
-#include "nanomysql.h"
-#include "collate.h"
 
 using namespace slave;
 
@@ -20,15 +19,15 @@ collate_map_t slave::readCollateMap(nanomysql::Connection& conn)
     conn.query("SHOW CHARACTER SET");
     conn.store(nanores);
 
-    for (nanomysql::Connection::result_t::const_iterator i = nanores.begin(); i != nanores.end(); ++i)
+    for (const auto& nanore : nanores)
     {
-        std::map<std::string, nanomysql::field>::const_iterator z = i->find("Charset");
-        if (z == i->end())
+        auto z = nanore.find("Charset");
+        if (z == nanore.end())
             throw std::runtime_error("Slave::readCollateMap(): SHOW CHARACTER SET query did not return 'Charset'");
         const std::string name = z->second.data;
 
-        z = i->find("Maxlen");
-        if (z == i->end())
+        z = nanore.find("Maxlen");
+        if (z == nanore.end())
             throw std::runtime_error("Slave::readCollateMap(): SHOW CHARACTER SET query did not return 'Maxlen'");
 
         const int maxlen = atoi(z->second.data.c_str());
@@ -40,17 +39,17 @@ collate_map_t slave::readCollateMap(nanomysql::Connection& conn)
     conn.query("SHOW COLLATION");
     conn.store(nanores);
 
-    for (nanomysql::Connection::result_t::const_iterator i = nanores.begin(); i != nanores.end(); ++i)
+    for (const auto& nanore : nanores)
     {
         collate_info ci;
 
-        std::map<std::string, nanomysql::field>::const_iterator z = i->find("Collation");
-        if (z == i->end())
+        auto z = nanore.find("Collation");
+        if (z == nanore.end())
             throw std::runtime_error("Slave::readCollateMap(): SHOW COLLATION query did not return 'Collation'");
         ci.name = z->second.data;
 
-        z = i->find("Charset");
-        if (z == i->end())
+        z = nanore.find("Charset");
+        if (z == nanore.end())
             throw std::runtime_error("Slave::readCollateMap(): SHOW COLLATION query did not return 'Charset'");
         ci.charset = z->second.data;
 

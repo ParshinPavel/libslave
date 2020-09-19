@@ -381,6 +381,9 @@ bool read_log_event(const char* buf, uint event_len, Basic_event_info& bei, Even
     case TRANSACTION_CONTEXT_EVENT:
     case VIEW_CHANGE_EVENT:
     case XA_PREPARE_LOG_EVENT:
+    case PARTIAL_UPDATE_ROWS_EVENT:
+    case START_5_7_ENCRYPTION_EVENT:
+    case MARIA_EVENTS_BEGIN:
         if (event_stat)
             event_stat->tickOther();
         return false;

@@ -19,7 +19,7 @@
 #include "MysqlGuard.h"
 #include "nanofield.h"
 #include <stdexcept>
-#include <stdio.h>
+#include <cstdio>
 #include <vector>
 
 namespace nanomysql {
@@ -176,7 +176,7 @@ public:
     {
         _mysql_res_wrap re(::mysql_use_result(m_conn));
 
-        if (re.s == NULL) {
+        if (re.s == nullptr) {
             throw_error("mysql_use_result() failed");
         }
 
@@ -197,7 +197,7 @@ public:
         while (1) {
             MYSQL_ROW row = ::mysql_fetch_row(re.s);
 
-            if (row == NULL) {
+            if (row == nullptr) {
                 if (::mysql_errno(m_conn) != 0) {
                     throw_error("mysql_fetch_row() failed");
                 }
